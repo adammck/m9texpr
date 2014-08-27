@@ -1,0 +1,38 @@
+/* Lexical Part */
+
+id : 'a'-'z' {'a'-'z'} ;
+
+int64 : '1'-'9' {'0'-'9'} ;
+
+quotedstring : '"' . '"' ;
+
+operator : '=' '=' | '!' '=' | '<' | '>' ;
+
+!whitespace : ' ' ;
+
+/* Syntax Part */
+
+<<
+import(
+	"github.com/adammck/m9texp/ast"
+	"github.com/adammck/m9texp/token"
+)
+>>
+
+Expr
+  : Expr Operator Atom << ast.MakeBinaryExpr($0.(*ast.Expr), $2.(*ast.Atom), $1.(*ast.Operator)) >>
+  | Atom               << ast.MakeUnaryExpr($0.(*ast.Atom)) >>
+  ;     
+
+Atom:
+  : Variable      << ast.MakeAtom($0) >>
+  | StringLiteral << ast.MakeAtom($0) >>
+  | Int           << ast.MakeAtom($0) >>
+  | "(" Expr ")"  << ast.MakeAtom($1) >>
+	;
+
+Variable      : id           << ast.NewVariable(string($0.(*token.Token).Lit)) >> ;
+StringLiteral : quotedstring << ast.MakeStringLiteral($0.(*token.Token)) >> ;
+Int           : int64        << ast.NewInteger($0.(*token.Token).Lit) >> ;
+
+Operator: operator << ast.NewOperator($0.(*token.Token)) >> ;
