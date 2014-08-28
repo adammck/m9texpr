@@ -26,6 +26,11 @@ func (e *Expression) String() string {
 	}
 }
 
-func (e *Expression) Eval(map[string]interface{}) bool {
-	return false
+func (e *Expression) Eval(ctx map[string]interface{}) bool {
+	if e.Operator == nil {
+		return e.Operand.Eval(ctx)
+
+	} else {
+		panic("not implemented")
+	}
 }

@@ -19,6 +19,20 @@ func (v *Variable) String() string {
   return fmt.Sprintf("var(%s)", v.Name)
 }
 
+func (v *Variable) Eval(ctx map[string]interface{}) bool {
+  vv, ok := ctx[v.Name]
+  if !ok {
+    return false
+  }
+
+  switch vvv := vv.(type) {
+    case bool:
+      return vvv
+    default:
+      panic("only bool vars are implemented")
+  }
+}
+
 // IntValue converts a token into an int64.
 func IntValue(tok *token.Token) (int64, error) {
   return util.IntValue(tok.Lit)

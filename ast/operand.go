@@ -51,3 +51,12 @@ func (o *Operand) String() string {
 
   return fmt.Sprintf("o[%s]", v)
 }
+
+func (o *Operand) Eval(ctx map[string]interface{}) bool {
+  if o.Variable != nil {
+    return o.Variable.Eval(ctx)
+
+  } else {
+    panic("not implemented!")
+  }
+}
