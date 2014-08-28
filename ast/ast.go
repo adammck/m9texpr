@@ -36,8 +36,8 @@ func (e *Expression) String() string {
 
 type Operand struct {
 	Variable      *Variable
-	Integer       *Integer
-	StringLiteral *StringLiteral
+	Int           *int64
+	Str           *string
 	Expression    *Expression
 }
 
@@ -47,11 +47,11 @@ func MakeOperand(untype interface{}) (*Operand, error) {
 	case *Variable:
 		return &Operand{Variable: typed}, nil
 
-	case *Integer:
-		return &Operand{Integer: typed}, nil
+	case int64:
+		return &Operand{Int: &typed}, nil
 
-	case *StringLiteral:
-		return &Operand{StringLiteral: typed}, nil
+	case string:
+		return &Operand{Str: &typed}, nil
 
 	case *Expression:
 		return &Operand{Expression: typed}, nil
@@ -67,11 +67,11 @@ func (o *Operand) String() string {
 	if o.Variable != nil {
 		v = o.Variable
 
-	} else if o.Integer != nil {
-		v = o.Integer
+	} else if o.Int != nil {
+		v = fmt.Sprintf("int(%d)", *o.Int)
 
-	} else if o.StringLiteral != nil {
-		v = o.StringLiteral
+	} else if o.Str != nil {
+		v = fmt.Sprintf("str(%s)", *o.Str)
 
 	} else if o.Expression != nil {
 		v = o.Expression
@@ -96,7 +96,7 @@ type Operator struct {
 	Type opType
 }
 
-func NewOperator(tok *token.Token) (*Operator, error) {
+func MakeOperator(tok *token.Token) (*Operator, error) {
 	var t opType
 
 	switch string(tok.Lit) {
@@ -142,39 +142,20 @@ type Variable struct {
 	Name string
 }
 
-func NewVariable(val string) (*Variable, error) {
-	return &Variable{val}, nil
+func MakeVariable(tok *token.Token) (*Variable, error) {
+	return &Variable{Name: string(tok.Lit)}, nil
 }
 
 func (v *Variable) String() string {
 	return fmt.Sprintf("var(%s)", v.Name)
 }
 
-type Integer struct {
-	Val int64
+// IntValue converts a token into an int64.
+func IntValue(tok *token.Token) (int64, error) {
+	return util.IntValue(tok.Lit)
 }
 
-func NewInteger(lit []byte) (*Integer, error) {
-	i, err := util.IntValue(lit)
-	if err != nil {
-		return nil, err
-	}
-
-	return &Integer{i}, nil
-}
-
-func (i *Integer) String() string {
-	return fmt.Sprintf("int(%d)", i.Val)
-}
-
-type StringLiteral struct {
-	Str string
-}
-
-func MakeStringLiteral(tok *token.Token) (*StringLiteral, error) {
-	return &StringLiteral{strings.Trim(string(tok.Lit), "\"")}, nil
-}
-
-func (s *StringLiteral) String() string {
-	return fmt.Sprintf("str(%s)", s.Str)
+// StringValue converts a token into a string.
+func StrValue(tok *token.Token) (string, error) {
+	return strings.Trim(string(tok.Lit), "\""), nil
 }

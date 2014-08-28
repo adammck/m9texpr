@@ -26,13 +26,14 @@ Expression
 
 Operand:
   : Variable            << ast.MakeOperand($0) >>
-  | StringLiteral       << ast.MakeOperand($0) >>
+  | Str                 << ast.MakeOperand($0) >>
   | Int                 << ast.MakeOperand($0) >>
   | "(" Expression ")"  << ast.MakeOperand($1) >>
 	;
 
-Variable      : id           << ast.NewVariable(string($0.(*token.Token).Lit)) >> ;
-StringLiteral : quotedstring << ast.MakeStringLiteral($0.(*token.Token)) >> ;
-Int           : int64        << ast.NewInteger($0.(*token.Token).Lit) >> ;
+Variable      : id       << ast.MakeVariable($0.(*token.Token)) >> ;
+Operator      : operator << ast.MakeOperator($0.(*token.Token)) >> ;
 
-Operator: operator << ast.NewOperator($0.(*token.Token)) >> ;
+// Literals
+Str : quotedstring << ast.StrValue($0.(*token.Token)) >> ;
+Int : int64        << ast.IntValue($0.(*token.Token)) >> ;
