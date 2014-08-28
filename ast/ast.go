@@ -2,33 +2,28 @@ package ast
 
 import (
 	"fmt"
+	"strings"
 	"github.com/adammck/m9texp/token"
 	"github.com/adammck/m9texp/util"
-	"strings"
 )
 
 type Expression struct {
-
-	// single value
-	Operand *Operand
-
-	// or more recursive exprs
-	Left     *Expression
-	Right    *Operand
-	Operator *Operator
+	Expression *Expression
+	Operator   *Operator
+	Operand    *Operand
 }
 
 func MakeUnaryExpression(o *Operand) (*Expression, error) {
 	return &Expression{Operand: o}, nil
 }
 
-func MakeBinaryExpression(left *Expression, right *Operand, op *Operator) (*Expression, error) {
-	return &Expression{Operator: op, Left: left, Right: right}, nil
+func MakeBinaryExpression(expression *Expression, operand *Operand, operator *Operator) (*Expression, error) {
+	return &Expression{expression, operator, operand}, nil
 }
 
 func (e *Expression) String() string {
 	if e.Operator != nil {
-		return fmt.Sprintf("e{%s %s %s}", e.Left, e.Operator, e.Right)
+		return fmt.Sprintf("e{%s %s %s}", e.Expression, e.Operator, e.Operand)
 	} else {
 		return fmt.Sprintf("e{%s}", e.Operand)
 	}
@@ -41,7 +36,6 @@ type Operand struct {
 	Expression    *Expression
 }
 
-// TODO: Maybe move the typecasting in the bnf?
 func MakeOperand(untype interface{}) (*Operand, error) {
 	switch typed := untype.(type) {
 	case *Variable:

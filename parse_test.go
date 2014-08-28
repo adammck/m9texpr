@@ -18,6 +18,7 @@ var testExprs = []*TE{
 	{"\"b\"", "e{o[str(b)]}"},
 	{"a == 1", "e{e{o[var(a)]} op(eq) o[int(1)]}"},
 	{"a > b < c", "e{e{e{o[var(a)]} op(gt) o[var(b)]} op(lt) o[var(c)]}"},
+	{"(a > b) < c", "e{e{o[e{e{o[var(a)]} op(gt) o[var(b)]}]} op(lt) o[var(c)]}"},
 	{"a > (b < c)", "e{e{o[var(a)]} op(gt) o[e{e{o[var(b)]} op(lt) o[var(c)]}]}"},
 }
 

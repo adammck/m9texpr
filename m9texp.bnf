@@ -1,16 +1,12 @@
-/* Lexical Part */
+// Lexical
 
-id : 'a'-'z' {'a'-'z'} ;
+id           : 'a'-'z' {'a'-'z'}             ;
+int64        : '1'-'9' {'0'-'9'}             ;
+quotedstring : '"' . '"'                     ;
+operator     : '=' '=' | '!' '=' | '<' | '>' ;
+!whitespace  : ' '                           ;
 
-int64 : '1'-'9' {'0'-'9'} ;
-
-quotedstring : '"' . '"' ;
-
-operator : '=' '=' | '!' '=' | '<' | '>' ;
-
-!whitespace : ' ' ;
-
-/* Syntax Part */
+// Syntax
 
 <<
 import(
@@ -31,9 +27,7 @@ Operand:
   | "(" Expression ")"  << ast.MakeOperand($1) >>
 	;
 
-Variable      : id       << ast.MakeVariable($0.(*token.Token)) >> ;
-Operator      : operator << ast.MakeOperator($0.(*token.Token)) >> ;
-
-// Literals
-Str : quotedstring << ast.StrValue($0.(*token.Token)) >> ;
-Int : int64        << ast.IntValue($0.(*token.Token)) >> ;
+Operator : operator     << ast.MakeOperator($0.(*token.Token)) >> ;
+Variable : id           << ast.MakeVariable($0.(*token.Token)) >> ;
+Str      : quotedstring << ast.StrValue($0.(*token.Token)) >>     ;
+Int      : int64        << ast.IntValue($0.(*token.Token)) >>     ;
