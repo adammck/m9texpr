@@ -13,12 +13,12 @@ type TE struct {
 }
 
 var testExprs = []*TE{
-	{"1",           "expr{atom[int(1)]}"},
-	{"a",           "expr{atom[var(a)]}"},
-	{"\"b\"",       "expr{atom[str(b)]}"},
-	{"a == 1",      "expr{expr{atom[var(a)]} op(eq) atom[int(1)]}"},
-	{"a > b < c",   "expr{expr{expr{atom[var(a)]} op(gt) atom[var(b)]} op(lt) atom[var(c)]}"},
-	{"a > (b < c)", "expr{expr{atom[var(a)]} op(gt) atom[expr{expr{atom[var(b)]} op(lt) atom[var(c)]}]}"},
+	{"1", "e{o[int(1)]}"},
+	{"a", "e{o[var(a)]}"},
+	{"\"b\"", "e{o[str(b)]}"},
+	{"a == 1", "e{e{o[var(a)]} op(eq) o[int(1)]}"},
+	{"a > b < c", "e{e{e{o[var(a)]} op(gt) o[var(b)]} op(lt) o[var(c)]}"},
+	{"a > (b < c)", "e{e{o[var(a)]} op(gt) o[e{e{o[var(b)]} op(lt) o[var(c)]}]}"},
 }
 
 func TestParser(t *testing.T) {
@@ -37,7 +37,7 @@ func TestParser(t *testing.T) {
 
 		// invalid output?
 		if expr != nil {
-			actual := expr.(*ast.Expr).String()
+			actual := expr.(*ast.Expression).String()
 
 			if actual != ts.expected {
 				t.Errorf("\nsrc:    %#v\ngot:    %s\nwanted: %v", ts.src, actual, ts.expected)

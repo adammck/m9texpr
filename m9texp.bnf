@@ -19,16 +19,16 @@ import(
 )
 >>
 
-Expr
-  : Expr Operator Atom << ast.MakeBinaryExpr($0.(*ast.Expr), $2.(*ast.Atom), $1.(*ast.Operator)) >>
-  | Atom               << ast.MakeUnaryExpr($0.(*ast.Atom)) >>
+Expression
+  : Expression Operator Operand << ast.MakeBinaryExpression($0.(*ast.Expression), $2.(*ast.Operand), $1.(*ast.Operator)) >>
+  | Operand                     << ast.MakeUnaryExpression($0.(*ast.Operand)) >>
   ;     
 
-Atom:
-  : Variable      << ast.MakeAtom($0) >>
-  | StringLiteral << ast.MakeAtom($0) >>
-  | Int           << ast.MakeAtom($0) >>
-  | "(" Expr ")"  << ast.MakeAtom($1) >>
+Operand:
+  : Variable            << ast.MakeOperand($0) >>
+  | StringLiteral       << ast.MakeOperand($0) >>
+  | Int                 << ast.MakeOperand($0) >>
+  | "(" Expression ")"  << ast.MakeOperand($1) >>
 	;
 
 Variable      : id           << ast.NewVariable(string($0.(*token.Token).Lit)) >> ;
