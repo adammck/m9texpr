@@ -29,6 +29,10 @@ func (e *Expression) String() string {
 	}
 }
 
+func (e *Expression) Eval(map[string]interface{}) bool {
+	return false
+}
+
 type Operand struct {
 	Variable      *Variable
 	Int           *int64
