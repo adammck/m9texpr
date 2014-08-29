@@ -6,7 +6,7 @@ import (
 
 type Expression struct {
 	Expression *Expression
-	Operator   *Operator
+	Operator   Operator
 	Operand    *Operand
 }
 
@@ -14,7 +14,7 @@ func MakeUnaryExpression(o *Operand) (*Expression, error) {
 	return &Expression{Operand: o}, nil
 }
 
-func MakeBinaryExpression(expression *Expression, operand *Operand, operator *Operator) (*Expression, error) {
+func MakeBinaryExpression(expression *Expression, operand *Operand, operator Operator) (*Expression, error) {
 	return &Expression{expression, operator, operand}, nil
 }
 

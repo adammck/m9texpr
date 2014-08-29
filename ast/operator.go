@@ -5,57 +5,80 @@ import (
   "github.com/adammck/m9texp/gen/token"
 )
 
-type opType uint8
-
-const (
-  OpEquals opType = iota
-  OpNotEquals
-  OpLessThan
-  OpGreaterThan
-)
-
-type Operator struct {
-  Type opType
+// TMP: This is just a placeholder until expressions are interfaces.
+type Expr interface {
+  String()
 }
 
-func MakeOperator(tok *token.Token) (*Operator, error) {
-  var t opType
+type Operator interface {
+  Compare(left Expr, right Expr) bool
+}
 
-  switch string(tok.Lit) {
+type Equals      struct { }
+type NotEquals   struct { }
+type GreaterThan struct { }
+type LessThan    struct { }
+
+func MakeOperator(tok *token.Token) (Operator, error) {
+  v := string(tok.Lit)
+  var t Operator
+
+  switch v {
   case "==":
-    t = OpEquals
+    t = &Equals{}
 
   case "!=":
-    t = OpNotEquals
+    t = &NotEquals{}
 
   case ">":
-    t = OpGreaterThan
+    t = &GreaterThan{}
 
   case "<":
-    t = OpLessThan
+    t = &LessThan{}
 
   default:
     return nil, fmt.Errorf("invalid operator: %#v", tok.Lit)
   }
 
-  return &Operator{Type: t}, nil
+  return t, nil
 }
 
-func (op *Operator) String() string {
-  switch op.Type {
-  case OpEquals:
-    return "op(eq)"
+// ==
 
-  case OpNotEquals:
-    return "op(ne)"
+func (o *Equals) Compare(left Expr, right Expr) bool {
+  return false
+}
 
-  case OpGreaterThan:
-    return "op(gt)"
+func (o *Equals) String() string {
+  return "op(eq)"
+}
 
-  case OpLessThan:
-    return "op(lt)"
+// !=
 
-  default:
-    panic("invalid operator")
-  }
+func (o *NotEquals) Compare(left Expr, right Expr) bool {
+  return false
+}
+
+func (o *NotEquals) String() string {
+  return "op(ne)"
+}
+
+// >
+
+func (o *GreaterThan) Compare(left Expr, right Expr) bool {
+  return false
+}
+
+func (o *GreaterThan) String() string {
+  return "op(gt)"
+}
+
+// <
+
+func (o *LessThan) Compare(left Expr, right Expr) bool {
+  return false
+}
+
+func (o *LessThan) String() string {
+  return "op(lt)"
 }

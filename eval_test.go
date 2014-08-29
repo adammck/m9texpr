@@ -18,7 +18,7 @@ var (
 	// b == c
 	bcExpr = &ast.Expression{
 		Expression: &ast.Expression{Operand: &ast.Operand{Variable: &ast.Variable{Name: "a"}}},
-		Operator:   &ast.Operator{Type: ast.OpEquals},
+		Operator:   &ast.Equals{},
 		Operand:    &ast.Operand{Variable: &ast.Variable{Name: "b"}},
 	}
 )
