@@ -5,9 +5,11 @@ import (
 	"testing"
 )
 
+type ctx map[string]interface{}
+
 type evalExample struct {
 	expr     *ast.Expression
-	context  map[string]interface{}
+	context  ctx
 	expected bool
 }
 
@@ -17,28 +19,33 @@ var (
 
 	// b == c
 	bcExpr = &ast.Expression{
-		Expression: &ast.Expression{Operand: &ast.Operand{Variable: &ast.Variable{Name: "a"}}},
+		Expression: &ast.Expression{Operand: &ast.Operand{Variable: &ast.Variable{Name: "b"}}},
 		Operator:   &ast.Equals{},
-		Operand:    &ast.Operand{Variable: &ast.Variable{Name: "b"}},
+		Operand:    &ast.Operand{Variable: &ast.Variable{Name: "c"}},
 	}
 )
 
 var evalExamples = []*evalExample{
-	{aExpr, map[string]interface{}{"a": true}, true},
-	{aExpr, map[string]interface{}{"a": false}, false},
-	{bcExpr, map[string]interface{}{"b": true, "c": true}, true},
-	{bcExpr, map[string]interface{}{"b": false, "c": false}, true},
-	{bcExpr, map[string]interface{}{"b": true, "c": false}, false},
-	{bcExpr, map[string]interface{}{"b": false, "c": true}, false},
+	{aExpr, ctx{"a": true}, true},               // 1
+	{aExpr, ctx{"a": false}, false},             // 2
+	{bcExpr, ctx{"b": true, "c": true}, true},   // 3
+	{bcExpr, ctx{"b": false, "c": false}, true}, // 4
+	{bcExpr, ctx{"b": true, "c": false}, false}, // 5
+	{bcExpr, ctx{"b": false, "c": true}, false}, // 6
 }
 
 func TestEval(t *testing.T) {
 	pass := true
 
 	for i, eg := range evalExamples {
-		actual := eg.expr.Eval(eg.context)
-		if actual != eg.expected {
-			t.Errorf("Example #%d => %v, expected %v", i, actual, eg.expected)
+		actual, err := eg.expr.Eval(eg.context)
+
+		if err != nil {
+			t.Errorf("Example #%d: %s", i, err.Error())
+			pass = false
+
+		} else if actual != eg.expected {
+			t.Errorf("Example #%d: got %v, expected %v", i, actual, eg.expected)
 			pass = false
 		}
 	}

@@ -52,7 +52,7 @@ func (o *Operand) String() string {
   return fmt.Sprintf("o[%s]", v)
 }
 
-func (o *Operand) Eval(ctx map[string]interface{}) bool {
+func (o *Operand) Eval(ctx map[string]interface{}) (interface{}, error) {
   if o.Variable != nil {
     return o.Variable.Eval(ctx)
 

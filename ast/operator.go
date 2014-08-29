@@ -2,11 +2,10 @@ package ast
 
 // TMP: This is just a placeholder until expressions are interfaces.
 type Expr interface {
-  String()
 }
 
 type Operator interface {
-  Compare(left Expr, right Expr) bool
+  Compare(left Expr, right Expr) (bool, error)
 }
 
 type Equals      struct { }
@@ -16,8 +15,8 @@ type LessThan    struct { }
 
 // ==
 
-func (o *Equals) Compare(left Expr, right Expr) bool {
-  return false
+func (o *Equals) Compare(left Expr, right Expr) (bool, error) {
+  return (left == right), nil
 }
 
 func (o *Equals) String() string {
@@ -26,8 +25,8 @@ func (o *Equals) String() string {
 
 // !=
 
-func (o *NotEquals) Compare(left Expr, right Expr) bool {
-  return false
+func (o *NotEquals) Compare(left Expr, right Expr) (bool, error) {
+  return (left != right), nil
 }
 
 func (o *NotEquals) String() string {
@@ -36,8 +35,8 @@ func (o *NotEquals) String() string {
 
 // >
 
-func (o *GreaterThan) Compare(left Expr, right Expr) bool {
-  return false
+func (o *GreaterThan) Compare(left Expr, right Expr) (bool, error) {
+  return false, nil
 }
 
 func (o *GreaterThan) String() string {
@@ -46,8 +45,8 @@ func (o *GreaterThan) String() string {
 
 // <
 
-func (o *LessThan) Compare(left Expr, right Expr) bool {
-  return false
+func (o *LessThan) Compare(left Expr, right Expr) (bool, error) {
+  return false, nil
 }
 
 func (o *LessThan) String() string {

@@ -19,15 +19,15 @@ func (v *Variable) String() string {
   return fmt.Sprintf("var(%s)", v.Name)
 }
 
-func (v *Variable) Eval(ctx map[string]interface{}) bool {
+func (v *Variable) Eval(ctx map[string]interface{}) (interface{}, error) {
   vv, ok := ctx[v.Name]
   if !ok {
-    return false
+    return nil, fmt.Errorf("undefined: %s", v.Name)
   }
 
   switch vvv := vv.(type) {
     case bool:
-      return vvv
+      return vvv, nil
     default:
       panic("only bool vars are implemented")
   }

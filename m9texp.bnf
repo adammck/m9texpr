@@ -20,7 +20,7 @@ import(
 >>
 
 Expression
-  : Expression Operator Operand << ast.MakeBinaryExpression($0.(*ast.Expression), $2.(*ast.Operand), $1.(ast.Operator)) >>
+  : Expression Operator Operand << ast.MakeExpression($0.(*ast.Expression), $2.(*ast.Operand), $1.(ast.Operator)) >>
   | Operand                     << ast.MakeUnaryExpression($0.(*ast.Operand)) >>
   ;     
 
