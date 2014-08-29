@@ -6,8 +6,8 @@ import (
 
 type Operand struct {
   Variable      *Variable
-  Int           *int64
-  Str           *string
+  Int           *Int
+  Str           *Str
   Expression    *Expression
 }
 
@@ -16,11 +16,11 @@ func MakeOperand(untype interface{}) (*Operand, error) {
   case *Variable:
     return &Operand{Variable: typed}, nil
 
-  case int64:
-    return &Operand{Int: &typed}, nil
+  case *Int:
+    return &Operand{Int: typed}, nil
 
-  case string:
-    return &Operand{Str: &typed}, nil
+  case *Str:
+    return &Operand{Str: typed}, nil
 
   case *Expression:
     return &Operand{Expression: typed}, nil
@@ -37,10 +37,10 @@ func (o *Operand) String() string {
     v = o.Variable
 
   } else if o.Int != nil {
-    v = fmt.Sprintf("int(%d)", *o.Int)
+    v = o.Int
 
   } else if o.Str != nil {
-    v = fmt.Sprintf("str(%s)", *o.Str)
+    v = o.Str
 
   } else if o.Expression != nil {
     v = o.Expression
@@ -52,11 +52,29 @@ func (o *Operand) String() string {
   return fmt.Sprintf("o[%s]", v)
 }
 
-func (o *Operand) Eval(ctx map[string]interface{}) (interface{}, error) {
+func (o *Operand) Eval(ctx map[string]interface{}) (Expr, error) {
   if o.Variable != nil {
     return o.Variable.Eval(ctx)
 
   } else {
     panic("not implemented!")
+  }
+}
+
+func (o *Operand) Truthy() bool {
+  if o.Variable != nil {
+    return o.Variable.Truthy()
+
+  } else if o.Int != nil {
+    return o.Int.Truthy()
+
+  } else if o.Str != nil {
+    return o.Str.Truthy()
+
+  } else if o.Expression != nil {
+    return o.Expression.Truthy()
+
+  } else {
+    panic("invalid operand")
   }
 }

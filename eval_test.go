@@ -15,13 +15,13 @@ type evalExample struct {
 
 var (
 	// a
-	aExpr = &ast.Expression{Operand: &ast.Operand{Variable: &ast.Variable{Name: "a"}}}
+	aExpr = &ast.Expression{Right: &ast.Operand{Variable: &ast.Variable{Name: "a"}}}
 
 	// b == c
 	bcExpr = &ast.Expression{
-		Expression: &ast.Expression{Operand: &ast.Operand{Variable: &ast.Variable{Name: "b"}}},
-		Operator:   &ast.Equals{},
-		Operand:    &ast.Operand{Variable: &ast.Variable{Name: "c"}},
+		Left:  &ast.Expression{Right: &ast.Operand{Variable: &ast.Variable{Name: "b"}}},
+		Right: &ast.Operand{Variable: &ast.Variable{Name: "c"}},
+		Op:    &ast.Equals{},
 	}
 )
 
@@ -44,7 +44,7 @@ func TestEval(t *testing.T) {
 			t.Errorf("Example #%d: %s", i, err.Error())
 			pass = false
 
-		} else if actual != eg.expected {
+		} else if actual.Truthy() != eg.expected {
 			t.Errorf("Example #%d: got %v, expected %v", i, actual, eg.expected)
 			pass = false
 		}

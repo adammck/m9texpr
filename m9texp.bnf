@@ -10,11 +10,14 @@ notequals   : '!' '=' ;
 greaterthan : '>'     ;
 lessthan    : '<'     ;
 
+true  : 't' 'r' 'u' 'e'     ;
+false : 'f' 'a' 'l' 's' 'e' ;
+
 // Syntax
 
 <<
 import(
-	"github.com/adammck/m9texp/ast"
+  "github.com/adammck/m9texp/ast"
 	"github.com/adammck/m9texp/gen/token"
 )
 >>
@@ -25,7 +28,8 @@ Expression
   ;     
 
 Operand:
-  : Variable            << ast.MakeOperand($0) >>
+  : Bool                << ast.MakeOperand($0) >>
+  | Variable            << ast.MakeOperand($0) >>
   | Str                 << ast.MakeOperand($0) >>
   | Int                 << ast.MakeOperand($0) >>
   | "(" Expression ")"  << ast.MakeOperand($1) >>
@@ -38,6 +42,11 @@ Operator:
   | lessthan    << &ast.LessThan{},    nil >>
   ;
 
+Bool:
+  : true  << ast.True, nil >>
+  | false << ast.False, nil >>
+  ;
+
 Variable : id           << ast.MakeVariable($0.(*token.Token)) >> ;
-Str      : quotedstring << ast.StrValue($0.(*token.Token)) >>     ;
-Int      : int64        << ast.IntValue($0.(*token.Token)) >>     ;
+Str      : quotedstring << ast.MakeStr($0.(*token.Token)) >>      ;
+Int      : int64        << ast.MakeInt($0.(*token.Token)) >>      ;
