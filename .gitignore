@@ -1,5 +1,13 @@
-/errors
-/lexer
-/parser
-/token
-/util
+# Ignore generated files for now, while they're changing all the time. They'll
+# need to be comitted eventually, so this package can be imported.
+/gen/errors
+/gen/lexer
+/gen/parser
+/gen/token
+/gen/util
+
+# These are generated when an error occurs while the parser is being generated.
+# We'll never want to commit them.
+/gen/first.txt
+/gen/lexer_sets.txt
+/gen/terminals.txt

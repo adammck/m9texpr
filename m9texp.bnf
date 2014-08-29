@@ -11,7 +11,7 @@ operator     : '=' '=' | '!' '=' | '<' | '>' ;
 <<
 import(
 	"github.com/adammck/m9texp/ast"
-	"github.com/adammck/m9texp/token"
+	"github.com/adammck/m9texp/gen/token"
 )
 >>
 

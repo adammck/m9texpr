@@ -2,8 +2,8 @@ package test
 
 import (
 	"github.com/adammck/m9texp/ast"
-	"github.com/adammck/m9texp/lexer"
-	"github.com/adammck/m9texp/parser"
+	"github.com/adammck/m9texp/gen/lexer"
+	"github.com/adammck/m9texp/gen/parser"
 	"testing"
 )
 

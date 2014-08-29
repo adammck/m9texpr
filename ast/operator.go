@@ -2,7 +2,7 @@ package ast
 
 import (
   "fmt"
-  "github.com/adammck/m9texp/token"
+  "github.com/adammck/m9texp/gen/token"
 )
 
 type opType uint8

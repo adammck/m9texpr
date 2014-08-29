@@ -2,4 +2,4 @@
 
 To generate the parser:
 
-    gocc m9texp.bnf
+    gocc -o="gen" -p="github.com/adammck/m9texp/gen" m9texp.bnf

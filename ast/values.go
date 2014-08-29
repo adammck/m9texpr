@@ -3,8 +3,8 @@ package ast
 import (
   "fmt"
   "strings"
-  "github.com/adammck/m9texp/token"
-  "github.com/adammck/m9texp/util"
+  "github.com/adammck/m9texp/gen/token"
+  "github.com/adammck/m9texp/gen/util"
 )
 
 type Variable struct {
