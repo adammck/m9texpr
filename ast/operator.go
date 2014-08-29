@@ -1,10 +1,5 @@
 package ast
 
-import (
-  "fmt"
-  "github.com/adammck/m9texp/gen/token"
-)
-
 // TMP: This is just a placeholder until expressions are interfaces.
 type Expr interface {
   String()
@@ -18,30 +13,6 @@ type Equals      struct { }
 type NotEquals   struct { }
 type GreaterThan struct { }
 type LessThan    struct { }
-
-func MakeOperator(tok *token.Token) (Operator, error) {
-  v := string(tok.Lit)
-  var t Operator
-
-  switch v {
-  case "==":
-    t = &Equals{}
-
-  case "!=":
-    t = &NotEquals{}
-
-  case ">":
-    t = &GreaterThan{}
-
-  case "<":
-    t = &LessThan{}
-
-  default:
-    return nil, fmt.Errorf("invalid operator: %#v", tok.Lit)
-  }
-
-  return t, nil
-}
 
 // ==
 

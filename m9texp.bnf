@@ -3,8 +3,12 @@
 id           : 'a'-'z' {'a'-'z'}             ;
 int64        : '1'-'9' {'0'-'9'}             ;
 quotedstring : '"' . '"'                     ;
-operator     : '=' '=' | '!' '=' | '<' | '>' ;
 !whitespace  : ' '                           ;
+
+equals      : '=' '=' ;
+notequals   : '!' '=' ;
+greaterthan : '>'     ;
+lessthan    : '<'     ;
 
 // Syntax
 
@@ -27,7 +31,13 @@ Operand:
   | "(" Expression ")"  << ast.MakeOperand($1) >>
 	;
 
-Operator : operator     << ast.MakeOperator($0.(*token.Token)) >> ;
+Operator:
+  : equals      << &ast.Equals{},      nil >>
+  | notequals   << &ast.NotEquals{},   nil >>
+  | greaterthan << &ast.GreaterThan{}, nil >>
+  | lessthan    << &ast.LessThan{},    nil >>
+  ;
+
 Variable : id           << ast.MakeVariable($0.(*token.Token)) >> ;
 Str      : quotedstring << ast.StrValue($0.(*token.Token)) >>     ;
 Int      : int64        << ast.IntValue($0.(*token.Token)) >>     ;
